@@ -11,6 +11,9 @@ import hashlib
 load_dotenv()  # ← ADD THIS — reads your .env file
 
 app = Flask(__name__)
+with app.app_context():
+    db.create_all()
+
 app.secret_key = os.environ.get('SECRET_KEY', 'fallback-dev-key')  # ← CHANGE THIS LINE
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///electronixs.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
