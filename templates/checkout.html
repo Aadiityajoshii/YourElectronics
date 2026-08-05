@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div style="max-width:900px; margin:60px auto; padding:0 20px;">
+
+  <h2 style="font-size:28px; font-weight:700; color:#e8eaf0; margin-bottom:8px;">Checkout</h2>
+  <p style="color:#7a7f96; margin-bottom:32px;">Fill your shipping details to place the order</p>
+
+  <div style="display:flex; gap:24px; flex-wrap:wrap;">
+
+    <!-- LEFT: Shipping Form -->
+    <div style="flex:1.5; min-width:300px;">
+      <div style="background:#13161e; border:1px solid rgba(255,255,255,0.08);
+                  border-radius:16px; padding:32px;">
+        <h3 style="color:#e8eaf0; margin-bottom:24px; font-size:16px;">📦 Shipping Details</h3>
+
+        <form method="POST" action="/checkout"
+              style="display:flex; flex-direction:column; gap:16px;">
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="color:#7a7f96; font-size:12px; font-weight:600;">FULL NAME *</label>
+            <input type="text" name="full_name" required
+                   value="{{ session.user_name }}"
+                   style="background:#0d0f14; border:1px solid rgba(255,255,255,0.1);
+                          border-radius:8px; padding:12px 14px; color:#e8eaf0; font-size:14px; outline:none;">
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="color:#7a7f96; font-size:12px; font-weight:600;">PHONE NUMBER *</label>
+            <input type="tel" name="phone" required
+                   pattern="[0-9]{10}" maxlength="10"
+                   placeholder="10-digit mobile number"
+                   style="background:#0d0f14; border:1px solid rgba(255,255,255,0.1);
+                          border-radius:8px; padding:12px 14px; color:#e8eaf0; font-size:14px; outline:none;">
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="color:#7a7f96; font-size:12px; font-weight:600;">ADDRESS *</label>
+            <input type="text" name="address1" required
+                   placeholder="House no, Street, Area"
+                   style="background:#0d0f14; border:1px solid rgba(255,255,255,0.1);
+                          border-radius:8px; padding:12px 14px; color:#e8eaf0; font-size:14px; outline:none;">
+          </div>
+
+          <div style="display:flex; gap:12px;">
+            <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+              <label style="color:#7a7f96; font-size:12px; font-weight:600;">CITY *</label>
+              <input type="text" name="city" required
+                     placeholder="e.g. Indore"
+                     style="background:#0d0f14; border:1px solid rgba(255,255,255,0.1);
+                            border-radius:8px; padding:12px 14px; color:#e8eaf0; font-size:14px; outline:none;">
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+              <label style="color:#7a7f96; font-size:12px; font-weight:600;">STATE *</label>
+              <input type="text" name="state" required
+                     placeholder="e.g. Madhya Pradesh"
+                     style="background:#0d0f14; border:1px solid rgba(255,255,255,0.1);
+                            border-radius:8px; padding:12px 14px; color:#e8eaf0; font-size:14px; outline:none;">
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="color:#7a7f96; font-size:12px; font-weight:600;">PIN CODE *</label>
+            <input type="text" name="pincode" required
+                   pattern="[0-9]{6}" maxlength="6"
+                   placeholder="6-digit PIN code"
+                   style="background:#0d0f14; border:1px solid rgba(255,255,255,0.1);
+                          border-radius:8px; padding:12px 14px; color:#e8eaf0; font-size:14px; outline:none;">
+          </div>
+
+          <button type="submit"
+                  style="background:#6c8ef5; color:white; border:none; padding:14px;
+                         border-radius:8px; font-size:15px; font-weight:600;
+                         cursor:pointer; margin-top:8px;">
+            Place Order →
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: Order Summary -->
+    <div style="flex:1; min-width:260px;">
+      <div style="background:#13161e; border:1px solid rgba(255,255,255,0.08);
+                  border-radius:16px; padding:24px; position:sticky; top:100px;">
+        <h3 style="color:#e8eaf0; margin-bottom:20px; font-size:16px;">🧾 Order Summary</h3>
+
+        {% for item in items %}
+        <div style="display:flex; justify-content:space-between; align-items:center;
+                    padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+          <div>
+            <p style="color:#e8eaf0; font-size:13px; font-weight:500;">{{ item.product.name }}</p>
+            <p style="color:#7a7f96; font-size:12px;">Qty: {{ item.quantity }}</p>
+          </div>
+          <span style="color:#4ade80; font-weight:600; font-size:13px;">
+            ₹{{ "{:,.0f}".format(item.product.price * item.quantity) }}
+          </span>
+        </div>
+        {% endfor %}
+
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.1);">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="color:#7a7f96; font-size:13px;">Subtotal</span>
+            <span style="color:#e8eaf0;">₹{{ "{:,.0f}".format(total) }}</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span style="color:#7a7f96; font-size:13px;">Shipping</span>
+            <span style="color:#4ade80; font-size:13px;">FREE</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:12px;
+                      padding-top:12px; border-top:1px solid rgba(255,255,255,0.1);">
+            <span style="color:#e8eaf0; font-weight:700;">Total</span>
+            <span style="color:#6c8ef5; font-weight:700; font-size:18px;">
+              ₹{{ "{:,.0f}".format(total) }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

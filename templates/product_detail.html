@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="product-detail-page">
+  <div class="product-main">
+    <div class="product-image-box">
+      <img src="{{ product.image_url }}" alt="{{ product.name }}">
+    </div>
+    <div class="product-info">
+      <span class="brand-tag">{{ product.brand }}</span>
+      <h1>{{ product.name }}</h1>
+      {% if product.badge %}
+        <span class="badge">{{ product.badge }}</span>
+      {% endif %}
+      <div class="price-row">
+        <span class="price">₹{{ "{:,.0f}".format(product.price) }}</span>
+        {% if product.old_price %}
+          <span class="old-price">₹{{ "{:,.0f}".format(product.old_price) }}</span>
+          <span class="discount-tag">{{ product.discount }}% off</span>
+        {% endif %}
+      </div>
+      {% if product.emi %}
+        <p class="emi">EMI from ₹{{ product.emi }}/month</p>
+      {% endif %}
+      <div class="rating-row">
+        ⭐ {{ product.rating }} ({{ product.reviews }} reviews)
+      </div>
+      <p class="description">{{ product.description }}</p>
+      {% if product.stock > 0 %}
+        <p class="stock-ok">✅ In Stock ({{ product.stock }} units)</p>
+        <button class="btn-add-cart" onclick="addToCart({{ product.id }})">
+          🛒 Add to Cart
+        </button>
+      {% else %}
+        <p class="out-of-stock">❌ Out of Stock</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  {% if related %}
+  <div class="related-section">
+    <h2>Related Products</h2>
+    <div class="related-grid">
+      {% for p in related %}
+      <a href="{{ url_for('product_detail', product_id=p.id) }}" class="related-card">
+        <img src="{{ p.image_url }}" alt="{{ p.name }}">
+        <p>{{ p.name }}</p>
+        <strong>₹{{ "{:,.0f}".format(p.price) }}</strong>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

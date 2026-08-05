@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Pay Now{% endblock %}
+
+{% block content %}
+<div style="max-width:500px; margin:80px auto; padding:0 20px; text-align:center;">
+
+  <div style="background:#13161e; border:1px solid rgba(255,255,255,0.08);
+              border-radius:20px; padding:40px;">
+
+    <div style="font-size:48px; margin-bottom:16px;">💳</div>
+    <h2 style="color:#e8eaf0; font-size:22px; margin-bottom:8px;">Complete Payment</h2>
+    <p style="color:#7a7f96; margin-bottom:32px;">Secure payment powered by Razorpay</p>
+
+    <div style="background:#0d0f14; border-radius:12px; padding:20px; margin-bottom:32px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <span style="color:#7a7f96;">Order Amount</span>
+        <span style="color:#e8eaf0;">₹{{ "{:,.0f}".format(total) }}</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:#7a7f96;">Shipping</span>
+        <span style="color:#4ade80;">FREE</span>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.08);
+                  margin-top:12px; padding-top:12px;
+                  display:flex; justify-content:space-between;">
+        <span style="color:#e8eaf0; font-weight:700;">Total to Pay</span>
+        <span style="color:#6c8ef5; font-weight:700; font-size:20px;">
+          ₹{{ "{:,.0f}".format(total) }}
+        </span>
+      </div>
+    </div>
+
+    <button id="pay-btn"
+            style="width:100%; background:linear-gradient(135deg,#6c8ef5,#a78bfa);
+                   color:white; border:none; padding:16px; border-radius:12px;
+                   font-size:16px; font-weight:700; cursor:pointer; letter-spacing:0.5px;">
+      Pay ₹{{ "{:,.0f}".format(total) }} Now →
+    </button>
+
+    <a href="/cart"
+       style="display:block; margin-top:16px; color:#7a7f96; font-size:13px; text-decoration:none;">
+      ← Go back to cart
+    </a>
+
+  </div>
+</div>
+
+<!-- Hidden form to submit payment details -->
+<form id="payment-form" action="/payment-success" method="POST" style="display:none;">
+  <input type="hidden" name="razorpay_payment_id" id="rp-payment-id">
+  <input type="hidden" name="razorpay_order_id"   id="rp-order-id">
+  <input type="hidden" name="razorpay_signature"  id="rp-signature">
+</form>
+
+<!-- Razorpay SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  document.getElementById('pay-btn').onclick = function () {
+    var options = {
+      key:         "{{ razorpay_key }}",
+      amount:      {{ (total * 100) | int }},
+      currency:    "INR",
+      name:        "Your Electronixs",
+      description: "Order Payment",
+      order_id:    "{{ rz_order.id }}",
+      handler: function (response) {
+        document.getElementById('rp-payment-id').value = response.razorpay_payment_id;
+        document.getElementById('rp-order-id').value   = response.razorpay_order_id;
+        document.getElementById('rp-signature').value  = response.razorpay_signature;
+        document.getElementById('payment-form').submit();
+      },
+      prefill: {
+        name:  "{{ user_name }}",
+      },
+      theme: { color: "#6c8ef5" },
+      modal: {
+        ondismiss: function () {
+          window.location.href = "/payment-failed";
+        }
+      }
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+  };
+</script>
+{% endblock %}

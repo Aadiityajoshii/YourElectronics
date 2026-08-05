@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Your Electronixs{% endblock %} – India's Premium Electronics</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="{{ url_for('index') }}" class="logo">Your <span>Electronixs</span></a>
+  <ul class="nav-links">
+    <li><a href="{{ url_for('index') }}#categories">Categories</a></li>
+    <li><a href="{{ url_for('index') }}#products">Products</a></li>
+    <li><a href="{{ url_for('index') }}#brands">Brands</a></li>
+    <li><a href="{{ url_for('index') }}#offers">Offers</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <input type="text" id="nav-search" placeholder="Search electronics..." autocomplete="off">
+      <button class="search-submit" onclick="doSearch()">🔍</button>
+    </div>
+    {% if session.user_id %}
+      <a href="{{ url_for('index') }}" class="nav-icon" title="{{ session.user_name }}">👤 {{ session.user_name.split()[0] }}</a>
+      <a href="/orders" class="nav-icon">My Orders</a>
+      <a href="/profile" class="nav-icon">Profile</a>
+      <a href="{{ url_for('logout') }}" class="nav-icon">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="nav-icon">Login</a>
+      <a href="{{ url_for('register') }}" class="nav-icon">Register</a>
+    {% endif %}
+    <a href="{{ url_for('cart') }}" class="cart-btn" id="cart-nav-btn">🛒 Cart ({{ cart_count }})</a>
+  </div>
+</nav>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }} <span onclick="this.parentElement.remove()">✕</span></div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+<!-- FLOATING CART -->
+<a href="{{ url_for('cart') }}" class="floating-cart" id="float-cart">
+  🛒
+  <span class="cart-count" id="float-count">{{ cart_count }}</span>
+</a>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+<!-- Quick View Modal -->
+<div id="quick-view-modal" class="qv-backdrop">
+  <div class="qv-modal">
+
+    <!-- Close button -->
+    <button class="qv-close" onclick="closeQuickView()">✕</button>
+
+    <div class="qv-layout">
+
+      <!-- Left: Image -->
+      <div class="qv-img-box">
+        <img id="qv-img" src="" alt="Product">
+      </div>
+
+      <!-- Right: Details -->
+      <div class="qv-details">
+        <div class="qv-brand" id="qv-brand"></div>
+        <h2 class="qv-name" id="qv-name"></h2>
+
+        <div class="qv-rating-row">
+          <span class="qv-stars" id="qv-rating"></span>
+          <span class="qv-rcount" id="qv-rcount"></span>
+        </div>
+
+        <div class="qv-price-row">
+          <span class="qv-price" id="qv-price"></span>
+          <span class="qv-old"   id="qv-old"></span>
+          <span class="qv-disc"  id="qv-disc"></span>
+        </div>
+
+        <div class="qv-emi"   id="qv-emi"></div>
+        <div class="qv-stock" id="qv-stock"></div>
+        <p   class="qv-desc"  id="qv-desc"></p>
+
+        <div class="qv-actions">
+          <button class="add-cart-btn" id="qv-cart-btn">🛒 Add to Cart</button>
+          <a class="buy-now-btn" id="qv-detail-btn" href="#">View Full Details →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

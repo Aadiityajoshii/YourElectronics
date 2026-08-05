@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}My Cart{% endblock %}
+
+{% block content %}
+<div class="cart-page">
+  <div class="cart-header fade-up">
+    <div class="section-tag">// SHOPPING</div>
+    <h2 class="section-title">My Cart</h2>
+  </div>
+
+  {% if items %}
+  <div class="cart-layout fade-up">
+    <div class="cart-items">
+      {% for item in items %}
+      <div class="cart-item">
+        <div class="cart-item-img">
+          <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}"
+               onerror="this.style.fontSize='3rem';this.src='';this.textContent='📦'">
+        </div>
+        <div class="cart-item-info">
+          <div class="cart-item-brand">{{ item.product.brand }}</div>
+          <div class="cart-item-name">{{ item.product.name }}</div>
+          <div class="cart-item-price">₹{{ "{:,}".format(item.product.price | int) }}</div>
+          <div class="cart-item-emi">No Cost EMI from ₹{{ "{:,}".format(item.product.emi) }}/mo</div>
+        </div>
+        <div class="cart-item-qty">
+          <span class="qty-label">Qty: {{ item.quantity }}</span>
+          <div class="qty-control">
+  <form method="POST" action="/update-cart/{{ item.id }}" style="display:inline;">
+    <input type="hidden" name="action" value="decrease">
+    <button type="submit" class="qty-btn">−</button>
+  </form>
+  <span class="qty-num">{{ item.quantity }}</span>
+  <form method="POST" action="/update-cart/{{ item.id }}" style="display:inline;">
+    <input type="hidden" name="action" value="increase">
+    <button type="submit" class="qty-btn">+</button>
+  </form>
+</div>
+          <form method="POST" action="{{ url_for('remove_from_cart', item_id=item.id) }}" style="display:inline;">
+            <button type="submit" class="remove-btn">🗑 Remove</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Subtotal ({{ items|length }} items)</span>
+        <span>₹{{ "{:,}".format(total | int) }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span style="color:#4ade80;">FREE</span>
+      </div>
+      <div class="summary-row">
+        <span>GST (18%)</span>
+        <span>₹{{ "{:,}".format((total * 0.18) | int) }}</span>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <span>₹{{ "{:,}".format((total * 1.18) | int) }}</span>
+      </div>
+      <a href="/checkout" class="checkout-btn"
+   style="display:block; text-align:center; text-decoration:none; margin-top:1.5rem;">
+  Proceed to Checkout →
+</a>
+      <a href="{{ url_for('index') }}" class="continue-btn">← Continue Shopping</a>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty-cart fade-up">
+    <div class="empty-icon">🛒</div>
+    <h3>Your cart is empty</h3>
+    <p>Looks like you haven't added anything yet.</p>
+    <a href="{{ url_for('index') }}#products" class="btn-primary">Start Shopping ↗</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

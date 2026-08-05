@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content fade-up">
+    <div class="hero-badge">🇮🇳 India's #1 Electronics Destination</div>
+    <h1 class="hero-title">
+      <span class="line1">Next-Gen</span><br>
+      <span class="line2">Electronics</span><br>
+      <span class="line1">Delivered</span>
+    </h1>
+    <p class="hero-sub">Premium electronics from the world's top brands — shipped across India with zero-cost EMI, GST invoices, and a 10-day return policy.</p>
+    <div class="hero-ctas">
+      <a href="#products" class="btn-primary">Shop Now ↗</a>
+      <a href="#categories" class="btn-outline">Browse Categories</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Products</div></div>
+      <div class="stat"><div class="stat-num">2M+</div><div class="stat-label">Happy Customers</div></div>
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Brands</div></div>
+    </div>
+  </div>
+  <div class="hero-3d">
+  <canvas id="product-canvas"></canvas>
+</div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories" class="fade-up">
+  <div class="section-tag">// BROWSE BY</div>
+  <h2 class="section-title">Product Categories</h2>
+  <p class="section-sub">Explore our curated collection of premium electronics</p>
+  <div class="cat-grid">
+    <div class="cat-card" onclick="filterProducts('Smartphones')">
+      <span class="cat-icon">📱</span>
+      <div class="cat-name">Smartphones</div>
+      <div class="cat-count">120+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Laptops')">
+      <span class="cat-icon">💻</span>
+      <div class="cat-name">Laptops</div>
+      <div class="cat-count">85+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Audio')">
+      <span class="cat-icon">🎧</span>
+      <div class="cat-name">Audio</div>
+      <div class="cat-count">200+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Wearables')">
+      <span class="cat-icon">⌚</span>
+      <div class="cat-name">Wearables</div>
+      <div class="cat-count">60+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Gaming')">
+      <span class="cat-icon">🎮</span>
+      <div class="cat-name">Gaming</div>
+      <div class="cat-count">150+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('TVs')">
+      <span class="cat-icon">📺</span>
+      <div class="cat-name">TVs</div>
+      <div class="cat-count">30+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Washing Machines')">
+      <span class="cat-icon">🫧</span>
+      <div class="cat-name">Washing Machines</div>
+      <div class="cat-count">20+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Refrigerators')">
+      <span class="cat-icon">🧊</span>
+      <div class="cat-name">Refrigerators</div>
+      <div class="cat-count">25+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Air Conditioners')">
+      <span class="cat-icon">❄️</span>
+      <div class="cat-name">Air Conditioners</div>
+      <div class="cat-count">20+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('Microwaves')">
+      <span class="cat-icon">📡</span>
+      <div class="cat-name">Microwaves</div>
+      <div class="cat-count">15+ Products</div>
+    </div>
+    <div class="cat-card" onclick="filterProducts('All')">
+      <span class="cat-icon">⚡</span>
+      <div class="cat-name">All Products</div>
+      <div class="cat-count">600+ Products</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" class="fade-up">
+  <div class="products-header">
+    <div>
+      <div class="section-tag">// FEATURED</div>
+      <h2 class="section-title">Top Products</h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="setFilter('All',this)">All</button>
+<button class="filter-tab" onclick="setFilter('Smartphones',this)">Phones</button>
+<button class="filter-tab" onclick="setFilter('Laptops',this)">Laptops</button>
+<button class="filter-tab" onclick="setFilter('Audio',this)">Audio</button>
+<button class="filter-tab" onclick="setFilter('Wearables',this)">Wearables</button>
+<button class="filter-tab" onclick="setFilter('Gaming',this)">Gaming</button>
+<button class="filter-tab" onclick="setFilter('TVs',this)"> TVs</button>
+<button class="filter-tab" onclick="setFilter('Washing Machines',this)"> Washing Machines</button>
+<button class="filter-tab" onclick="setFilter('Refrigerators',this)"> Refrigerators</button>
+<button class="filter-tab" onclick="setFilter('Air Conditioners',this)"> Air Conditioners</button>
+<button class="filter-tab" onclick="setFilter('Microwaves',this)"> Microwaves</button>
+      
+    </div>
+  </div>
+  <div class="prod-grid" id="prod-grid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section id="brands" class="brands-section fade-up">
+  <div class="section-tag">// OUR PARTNERS</div>
+  <h2 class="section-title">Top Brands</h2>
+  <div class="brands-grid">
+    {% for brand in ['Apple','Samsung','Sony','Dell','ASUS','OnePlus','JBL','Bose','LG','Lenovo','HP','Xiaomi'] %}
+    <div class="brand-pill" onclick="filterByBrand('{{ brand }}')">{{ brand }}</div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- OFFERS BANNER -->
+<section id="offers" class="fade-up">
+  <div class="offer-banner">
+    <div class="offer-text">
+      <div class="big">UP TO 40% OFF</div>
+      <h3>Monsoon Mega Sale</h3>
+      <p>Limited time offer on premium electronics</p>
+    </div>
+    <div class="offer-timer">
+      <div class="timer-box"><div class="timer-num" id="t-h">08</div><div class="timer-label">Hours</div></div>
+      <div class="timer-box"><div class="timer-num" id="t-m">45</div><div class="timer-label">Mins</div></div>
+      <div class="timer-box"><div class="timer-num" id="t-s">00</div><div class="timer-label">Secs</div></div>
+    </div>
+    <a href="#products" class="btn-primary">Grab Deals ↗</a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="fade-up">
+  <div class="section-tag">// WHY US</div>
+  <h2 class="section-title">Why Choose Us?</h2>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="feat-icon">🚀</div><div class="feat-title">Same Day Delivery</div><div class="feat-desc">Get your orders delivered on the same day in all major metro cities across India.</div></div>
+    <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-title">100% Genuine Products</div><div class="feat-desc">All products are BIS certified and sourced directly from authorized distributors.</div></div>
+    <div class="feat-card"><div class="feat-icon">💳</div><div class="feat-title">No Cost EMI</div><div class="feat-desc">Break your purchase into easy monthly installments with zero extra cost.</div></div>
+    <div class="feat-card"><div class="feat-icon">↩️</div><div class="feat-title">10-Day Easy Returns</div><div class="feat-desc">Not satisfied? Return within 10 days for a full refund — no questions asked.</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="fade-up">
+  <div class="section-tag">// REVIEWS</div>
+  <h2 class="section-title">What Customers Say</h2>
+  <div class="testimonials-grid">
+    <div class="testi-card">
+      <div class="testi-rating">★★★★★</div>
+      <p class="testi-text">"Amazing experience! Got my MacBook in just 4 hours. The price was the best I found online."</p>
+      <div class="testi-user"><div class="testi-avatar" style="background:linear-gradient(135deg,#00f5ff,#7c3aed);">AS</div><div class="testi-info"><div class="name">Adarsh singh</div><div class="loc">ips, indore</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-rating">★★★★★</div>
+      <p class="testi-text">"Genuine product, original packaging, and delivered within hours. Will definitely order again!"</p>
+      <div class="testi-user"><div class="testi-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">RD</div><div class="testi-info"><div class="name">Riya dangi</div><div class="loc">ips, indore</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-rating">★★★★☆</div>
+      <p class="testi-text">"Best prices in India! No Cost EMI made buying the PS5 so much easier. Loved the experience."</p>
+      <div class="testi-user"><div class="testi-avatar" style="background:linear-gradient(135deg,#4ade80,#00f5ff);">AV</div><div class="testi-info"><div class="name">Arjun Verma</div><div class="loc">Bangalore, KA</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Your <span>Electronixs</span></div>
+      <p>India's most trusted destination for premium electronics. Quality guaranteed, delivered fast.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#categories">Categories</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#offers">Offers</a></li>
+        <li><a href="{{ url_for('cart') }}">My Cart</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Policies</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Warranty</a></li>
+        <li><a href="#">GST Invoice</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Your Electronixs. All rights reserved.</p>
+    <div class="payment-icons">
+      <span class="pay-icon">💳 Visa</span>
+      <span class="pay-icon">💳 Mastercard</span>
+      <span class="pay-icon">📱 UPI</span>
+      <span class="pay-icon">🏦 Net Banking</span>
+      <span class="pay-icon">💰 COD</span>
+    </div>
+  </div>
+</footer>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const SERVER_PRODUCTS = {{ products | tojson | safe }};
+</script>
+{% endblock %}
